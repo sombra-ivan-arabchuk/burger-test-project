@@ -26,6 +26,8 @@ jobs:
       - run:
           name: build and run
           command: |
+            git config --global user.email "ivan.arabchuk@sombrainc.com"
+            git config --global user.name "sombra-ivan-arabchuk"
             npm run deploy
 workflows:
   build_and_test:
