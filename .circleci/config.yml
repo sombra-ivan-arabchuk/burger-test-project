@@ -23,6 +23,10 @@ jobs:
             - node_modules
           key: v1-dependencies-{{ checksum "package.json" }}
 
+      - add_ssh_keys:
+          fingerprints:
+            - '51:49:46:23:f3:20:98:f5:08:ae:bc:e8:b5:b5:84:39'
+
       - run:
           name: build and run
           command: |
