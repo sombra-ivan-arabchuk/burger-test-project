@@ -25,7 +25,7 @@ jobs:
 
       - add_ssh_keys:
           fingerprints:
-            - '51:49:46:23:f3:20:98:f5:08:ae:bc:e8:b5:b5:84:39'
+            - 'c4:c5:34:7a:c3:39:27:23:d0:25:ab:55:0c:1c:a2:1a'
 
       - run:
           name: build and run
