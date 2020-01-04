@@ -16,7 +16,9 @@ jobs:
       - run:
           name: preparing
           command: |
-            npm install
+            npm config set unsafe-perm true
+            npm install -g npm@latest
+            npm i
 
       - save_cache:
           paths:
