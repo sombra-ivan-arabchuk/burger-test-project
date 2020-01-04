@@ -1,4 +1,4 @@
-version: 2
+version: 2.1
 orbs:
   docker: circleci/docker@0.5.13
 jobs:
@@ -32,7 +32,7 @@ jobs:
           name: build and run
           command: npm run deploy
 workflows:
-  check_and_build:
+  build_and_test:
     jobs:
       - build:
           filters:
