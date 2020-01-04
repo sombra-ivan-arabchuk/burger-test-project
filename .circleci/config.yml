@@ -30,7 +30,8 @@ jobs:
 
       - run:
           name: build and run
-          command: npm run deploy
+          command: |
+            npm run deploy
 workflows:
   build_and_test:
     jobs:
