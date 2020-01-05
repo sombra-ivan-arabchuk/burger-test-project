@@ -26,12 +26,12 @@ jobs:
             npm install hexo --save
       - add_ssh_keys:
           fingerprints:
-            - 'c4:c5:34:7a:c3:39:27:23:d0:25:ab:55:0c:1c:a2:1a'
+            - '$FINGERPRINT'
       - run:
           name: build and run
           command: |
-            git config --global user.email "ivan.arabchuk@sombrainc.com"
-            git config --global user.name "sombra-ivan-arabchuk"
+            git config --global user.email "$EMAIL"
+            git config --global user.name "$USERNAME"
             npm run deploy
 workflows:
   build_and_test:
@@ -40,3 +40,4 @@ workflows:
           filters:
             branches:
               only: master
+              ignore: gh-pages
