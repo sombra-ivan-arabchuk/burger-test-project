@@ -31,8 +31,7 @@
     "max-len": [2, { "code": 100 }],
     "quotes": [2, "single", { "avoidEscape": true }],
     "jsx-quotes": [2, "prefer-double"],
-    "react/prop-types": 0,
-    "camelcase": 0
+    "react/prop-types": 0
   },
   "settings": {
     "react": {

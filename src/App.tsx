@@ -1,24 +1,16 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
+import { ProvideAuth } from './hooks/useAuth';
+import NavBar from './components/NavBar/NavBar';
 
-const App: React.FC = () => {
+const App = (): React.ReactElement => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edited text
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <ProvideAuth>
+        <>
+          <NavBar />
+        </>
+      </ProvideAuth>
     </div>
   );
 };
