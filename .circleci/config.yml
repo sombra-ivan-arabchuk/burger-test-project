@@ -32,6 +32,9 @@ jobs:
           command: |
             git config --global user.email "$EMAIL"
             git config --global user.name "$USERNAME"
+            export REACT_APP_NUTRITION_ID="$REACT_APP_NUTRITION_ID"
+            export REACT_APP_NUTRITION_KEY="$REACT_APP_NUTRITION_KEY"
+            export REACT_APP_GOOGLE_CLIENT_ID="$REACT_APP_GOOGLE_CLIENT_ID"
             npm run deploy
 workflows:
   build_and_test:
