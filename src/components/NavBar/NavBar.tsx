@@ -2,6 +2,8 @@ import React from 'react';
 import { AppBar, Button, makeStyles, Toolbar } from '@material-ui/core';
 import Typography from '@material-ui/core/Typography';
 import { useAuth } from '../../hooks/useAuth';
+import { withRouter } from 'react-router';
+import { History } from 'history';
 
 const useStyles = makeStyles(theme => ({
   grow: {
@@ -29,18 +31,22 @@ const useStyles = makeStyles(theme => ({
     },
   },
 }));
- 
-const NavBar = (): React.ReactElement => {
+
+interface NavBarProps {
+  history: History;
+}
+
+const NavBar = ({ history }: NavBarProps): React.ReactElement => {
   const classes = useStyles();
   const { signIn, signOut, user } = useAuth();
 
   const AccessBlock =
     user.name === '' ? (
-      <Button color="inherit" onClick={signIn}>
+      <Button color="inherit" onClick={(): Promise<string> => signIn(history)}>
         Login
       </Button>
     ) : (
-      <Button color="inherit" onClick={signOut}>
+      <Button color="inherit" onClick={(): void => signOut(history)}>
         Logout
       </Button>
     );
@@ -61,4 +67,4 @@ const NavBar = (): React.ReactElement => {
   );
 };
 
-export default NavBar;
+export default withRouter(NavBar);

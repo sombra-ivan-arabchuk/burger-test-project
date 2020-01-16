@@ -1,4 +1,5 @@
 import React, { useState, useContext, createContext, useEffect } from 'react';
+import { History } from 'history';
 
 interface ProvideAuthProps {
   children: React.ReactChild;
@@ -17,8 +18,8 @@ export interface User {
 export interface UseAuthProps {
   user: User;
   token: string;
-  signIn: (e: React.MouseEvent) => Promise<string>;
-  signOut: (e: React.MouseEvent) => void;
+  signIn: (e: History) => Promise<string>;
+  signOut: (e: History) => void;
 }
 
 const authContext = createContext<UseAuthProps>({
@@ -46,7 +47,7 @@ function useProvideAuth(): UseAuthProps {
   const [token, setToken] = useState();
   const [user, setUser] = useState({ name: '', email: '' });
 
-  const signIn = async (): Promise<string> => {
+  const signIn = async (history: History): Promise<string> => {
     const auth2 = window.gapi.auth2.getAuthInstance();
     const googleUser = await auth2.signIn();
     const profile = googleUser.getBasicProfile();
@@ -59,13 +60,15 @@ function useProvideAuth(): UseAuthProps {
     localStorage.setItem('user', JSON.stringify(profileData));
     setToken(idToken);
     setUser(profileData);
+    history.push('/catalog');
     return token;
   };
 
-  const signOut = (): void => {
+  const signOut = (history: History): void => {
     localStorage.clear();
     setToken(false);
     setUser({ name: '', email: '' });
+    history.push('/');
   };
 
   const localAuthRefresh = (): void => {
