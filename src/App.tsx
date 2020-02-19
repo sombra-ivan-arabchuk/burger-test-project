@@ -1,27 +1,19 @@
 import React from 'react';
 import './App.css';
 import { ProvideAuth } from './hooks/useAuth';
-import NavBar from './components/NavBar/NavBar';
-import { BrowserRouter, Route, Switch } from 'react-router-dom';
-import Catalog from './screens/Catalog/Catalog';
+import { ProvideIngredients } from './hooks/useIngredients';
+import { ProvideNetwork } from './hooks/useNetwork';
+import MainApp from './MainApp';
 const App = (): React.ReactElement => {
   return (
     <div>
-      <ProvideAuth>
-        <>
-          <BrowserRouter>
-            <NavBar />
-            <Switch>
-              <Route exact path="/">
-                <div>unauthenticated</div>
-              </Route>
-              <Route path="/catalog">
-                <Catalog />
-              </Route>
-            </Switch>
-          </BrowserRouter>
-        </>
-      </ProvideAuth>
+      <ProvideNetwork>
+        <ProvideAuth>
+          <ProvideIngredients>
+            <MainApp />
+          </ProvideIngredients>
+        </ProvideAuth>
+      </ProvideNetwork>
     </div>
   );
 };
