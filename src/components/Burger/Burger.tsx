@@ -9,9 +9,14 @@ export interface BurgerIngredients {
 export interface BurgerProps {
   ingredients: BurgerIngredients;
   name?: string;
+  isEditing?: boolean;
 }
 
-const Burger: FunctionComponent<BurgerProps> = ({ ingredients }) => {
+const Burger: FunctionComponent<BurgerProps> = ({
+  ingredients,
+  name,
+  isEditing = false,
+}) => {
   const transformedIngredients = Object.keys(ingredients)
     .map((igKey: string) => {
       return [...Array(ingredients[igKey])].map((_, i) => (
@@ -26,6 +31,13 @@ const Burger: FunctionComponent<BurgerProps> = ({ ingredients }) => {
   }
   return (
     <BurgerContainer>
+      {!isEditing && (
+        <div
+          style={{ fontSize: '20px', fontWeight: 'bold', marginBottom: '10px' }}
+        >
+          {name}
+        </div>
+      )}
       <BurgerIngredient type="bread-top" />
       {transformedIngredients}
       <BurgerIngredient type="bread-bottom" />

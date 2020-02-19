@@ -4,6 +4,7 @@ import NavBar from './components/NavBar/NavBar';
 import Catalog from './screens/Catalog/Catalog';
 import { useNetwork } from './hooks';
 import styled from 'styled-components';
+import OnBoarding from './screens/OnBoarding/OnBoarding';
 
 const MainApp: FC = () => {
   const { isOnline } = useNetwork();
@@ -16,7 +17,7 @@ const MainApp: FC = () => {
         </div>
         <Switch>
           <Route exact path="/">
-            <div>unauthenticated</div>
+            <OnBoarding />
           </Route>
           <Route path="/catalog">
             <Catalog />

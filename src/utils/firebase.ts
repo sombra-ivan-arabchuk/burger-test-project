@@ -1,6 +1,6 @@
 import { AxiosResponse } from 'axios';
 import burgerAPI from './api-resourses/firebase-burger';
-import { BurgerProps } from '../components/Burger/Burger';
+import { BurgerProps } from '../screens/Catalog/Catalog';
 
 const getBurgers = (): Promise<AxiosResponse> => burgerAPI.get('orders.json');
 

@@ -32,12 +32,11 @@ const useStyles = makeStyles({
   table: {},
 });
 
-const roundValue = (value: number) => Math.round(value);
+const roundValue = (value: number): number => Math.round(value);
 
 const BurgerDetailsTable: FC<any> = ({ ingredients: ingredientsCounts }) => {
   const classes = useStyles();
   const { ingredients } = useIngredients();
-  console.log(ingredients);
 
   const calculatedIngredients = Object.keys(ingredientsCounts).reduce(
     (result, currentKey) => {
@@ -67,7 +66,6 @@ const BurgerDetailsTable: FC<any> = ({ ingredients: ingredientsCounts }) => {
     // initial value
     { vitaminA: 0, vitaminC: 0, sodium: 0, calories: 0 },
   );
-  console.log(calculatedIngredients);
 
   return (
     <div>

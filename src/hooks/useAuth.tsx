@@ -45,7 +45,7 @@ export const useAuth = (): UseAuthProps => useContext(authContext);
 
 // Provider hook that creates auth object and handles state
 function useProvideAuth(): UseAuthProps {
-  const [token, setToken] = useState();
+  const [token, setToken] = useState('');
   const [user, setUser] = useState({ name: '', email: '' });
   const { isOnline } = useNetwork();
 
@@ -69,7 +69,7 @@ function useProvideAuth(): UseAuthProps {
 
   const signOut = (history: History): void => {
     localStorage.clear();
-    setToken(false);
+    setToken('');
     setUser({ name: '', email: '' });
     history.push('/');
   };
@@ -80,7 +80,7 @@ function useProvideAuth(): UseAuthProps {
     if (storedToken) {
       setToken(storedToken);
     } else {
-      setToken(false);
+      setToken('');
     }
     if (storedUser) {
       setUser(JSON.parse(storedUser));

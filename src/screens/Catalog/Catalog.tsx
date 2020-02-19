@@ -29,18 +29,31 @@ const Catalog = (): React.ReactElement => {
     setSelectedBurger,
   ] = React.useState<BurgerProps | null>(null);
   useEffect(() => {
-    getBurgers().then(({ data }) => {
-      const mappedData = Object.keys(data).map(key => ({
-        ...data[key],
-        id: key,
-      }));
-      setBurgers(mappedData);
-    });
+    const interval = setInterval(
+      () => {
+        getBurgers().then(({ data = {} }) => {
+          const resData = data || {};
+
+          const mappedData = Object.keys(resData)
+            .filter(key => !burgers.some(burger => burger.id === key))
+            .map(key => ({
+              ...data[key],
+              id: key,
+            }));
+          setBurgers(burgers.concat(mappedData));
+        });
+      },
+      burgers.length === 0 ? 1000 : 5000,
+    );
+
+    return () => clearInterval(interval);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isOnline]);
+  }, [isOnline, burgers]);
 
   const addNewBurger = (burger: BurgerProps): void => {
     setBurgers([...burgers, burger]);
+    setIsModalOpen(false);
+    setSelectedBurger(null);
   };
 
   const removeBurger = (id: string | undefined): void => {
@@ -58,17 +71,27 @@ const Catalog = (): React.ReactElement => {
       ...slicedBurgers,
       { ...updatedBurger, id: selectedBurger?.id },
     ]);
+    setSelectedBurger(null);
+    setIsModalOpen(false);
   };
 
   return (
     <>
       <CustomModal isOpen={isModalOpen} label="Burger Builder">
         <div>
-          <div onClick={(): void => setIsModalOpen(false)}>close</div>
+          <div
+            onClick={(): void => {
+              setIsModalOpen(false);
+              setSelectedBurger(null);
+            }}
+          >
+            close
+          </div>
           <BurgerBuilder
             addBurger={addNewBurger}
             updateBurger={updateBurger}
             ingredientsSet={selectedBurger?.ingredients}
+            burgerName={selectedBurger?.name}
             id={selectedBurger?.id}
           />
         </div>
@@ -111,7 +134,7 @@ const Catalog = (): React.ReactElement => {
               </BurgerWrapper>
             </Grid>
 
-            <Grid xs={12} sm={6}>
+            <Grid item xs={12} sm={6}>
               <div>
                 <BurgerDetailsTable ingredients={ingredients} />
               </div>

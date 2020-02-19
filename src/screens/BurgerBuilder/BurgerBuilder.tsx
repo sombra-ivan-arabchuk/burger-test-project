@@ -1,9 +1,10 @@
 import React, { FunctionComponent, useState } from 'react';
-import Burger, { BurgerProps } from '../../components/Burger/Burger';
+import Burger from '../../components/Burger/Burger';
 import BuildControls from '../../components/BuildControls/BuildControls';
 import CustomButton from '../../components/CustomButton/CustomButton';
 import CustomInput from '../../components/CustomInput/CustomInput';
 import { editBurger, saveBurger } from '../../utils/firebase';
+import { BurgerProps } from '../Catalog/Catalog';
 
 type BurgerBuilderProps = {
   addBurger: (burger: BurgerProps) => void;
@@ -24,6 +25,7 @@ const BurgerBuilder: FunctionComponent<BurgerBuilderProps> = ({
   burgerName,
   id,
 }) => {
+  const [isEditing] = useState(burgerName !== '');
   const [name, setName] = useState(burgerName || '');
   const [ingredients, setIngredients] = useState<IngredientProps>(
     ingredientsSet || {
@@ -55,8 +57,9 @@ const BurgerBuilder: FunctionComponent<BurgerBuilderProps> = ({
       ingredients: ingredients,
       name: name,
     };
-    saveBurger(newBurger).then(() => {
-      addBurger(newBurger);
+    saveBurger(newBurger).then(({ data }) => {
+      const { name } = data;
+      addBurger({ ...newBurger, id: name });
     });
   };
 
@@ -92,7 +95,7 @@ const BurgerBuilder: FunctionComponent<BurgerBuilderProps> = ({
           label={'Burger Name'}
         />
       </div>
-      <Burger ingredients={ingredients} name={name} />
+      <Burger ingredients={ingredients} name={name} isEditing={isEditing}/>
       <BuildControls
         addIngredient={addIngredient}
         removeIngredient={removeIngredient}
