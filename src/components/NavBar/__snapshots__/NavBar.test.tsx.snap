@@ -1,0 +1,60 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Catalog renders 1`] = `
+<div
+  class="makeStyles-grow-1"
+>
+  <header
+    class="MuiPaper-root MuiAppBar-root MuiAppBar-positionStatic makeStyles-appBar-2 MuiAppBar-colorPrimary MuiPaper-elevation4"
+  >
+    <div
+      class="MuiToolbar-root MuiToolbar-regular MuiToolbar-gutters"
+    >
+      <h6
+        class="MuiTypography-root makeStyles-title-3 MuiTypography-h6 MuiTypography-noWrap"
+      >
+        Burger-App
+      </h6>
+      <div
+        class="makeStyles-grow-1"
+      />
+      <div
+        class="makeStyles-sectionDesktop-4"
+      >
+        <button
+          class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-colorInherit"
+          tabindex="0"
+          type="button"
+        >
+          <span
+            class="MuiButton-label"
+          >
+            Login
+          </span>
+          <span
+            class="MuiTouchRipple-root"
+          />
+        </button>
+      </div>
+      <div
+        class="makeStyles-sectionMobile-5"
+      >
+        <button
+          class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-colorInherit"
+          tabindex="0"
+          type="button"
+        >
+          <span
+            class="MuiButton-label"
+          >
+            Login
+          </span>
+          <span
+            class="MuiTouchRipple-root"
+          />
+        </button>
+      </div>
+    </div>
+  </header>
+</div>
+`;

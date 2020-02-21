@@ -1,5 +1,6 @@
 import React, { useState, useContext, createContext, useEffect } from 'react';
 import { History } from 'history';
+import { useNetwork } from './useNetwork';
 
 interface ProvideAuthProps {
   children: React.ReactChild;
@@ -44,9 +45,11 @@ export const useAuth = (): UseAuthProps => useContext(authContext);
 
 // Provider hook that creates auth object and handles state
 function useProvideAuth(): UseAuthProps {
-  const [token, setToken] = useState();
+  const [token, setToken] = useState('');
   const [user, setUser] = useState({ name: '', email: '' });
+  const { isOnline } = useNetwork();
 
+  // TODO: wrap execution inside try catch
   const signIn = async (history: History): Promise<string> => {
     const auth2 = window.gapi.auth2.getAuthInstance();
     const googleUser = await auth2.signIn();
@@ -66,7 +69,7 @@ function useProvideAuth(): UseAuthProps {
 
   const signOut = (history: History): void => {
     localStorage.clear();
-    setToken(false);
+    setToken('');
     setUser({ name: '', email: '' });
     history.push('/');
   };
@@ -77,7 +80,7 @@ function useProvideAuth(): UseAuthProps {
     if (storedToken) {
       setToken(storedToken);
     } else {
-      setToken(false);
+      setToken('');
     }
     if (storedUser) {
       setUser(JSON.parse(storedUser));
@@ -100,7 +103,7 @@ function useProvideAuth(): UseAuthProps {
     // we include the empty array which means this only runs once on component mount
     // since we are simply getting an item from AsyncStorage that is sufficient for now
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [isOnline]);
 
   // Return the token, user object, and auth methods
   return {
