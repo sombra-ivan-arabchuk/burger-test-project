@@ -37,7 +37,7 @@ jobs:
             export REACT_APP_GOOGLE_CLIENT_ID="$REACT_APP_GOOGLE_CLIENT_ID"
             npm run deploy
 
-  test-community:
+  test-app:
     docker:
       - image: circleci/node:10.16
     steps:
