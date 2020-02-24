@@ -1,5 +1,5 @@
 import React, { FC } from 'react';
-import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import {  HashRouter, Route, Switch } from 'react-router-dom';
 import NavBar from './components/NavBar/NavBar';
 import Catalog from './screens/Catalog/Catalog';
 import { useNetwork } from './hooks';
@@ -11,7 +11,7 @@ const MainApp: FC = () => {
 
   return (
     <>
-      <BrowserRouter>
+      <HashRouter>
         <div>
           <NavBar />
         </div>
@@ -23,7 +23,7 @@ const MainApp: FC = () => {
             <Catalog />
           </Route>
         </Switch>
-      </BrowserRouter>
+      </HashRouter>
       {!isOnline && <OfflineHeader>you are offline</OfflineHeader>}
     </>
   );
