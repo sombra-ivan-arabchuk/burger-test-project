@@ -1,9 +1,0 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
-
-exports[`Catalog renders 1`] = `
-<div>
-  <div
-    style="width: 80%; height: 8%; margin: 2% auto; border-radius: 15px;"
-  />
-</div>
-`;

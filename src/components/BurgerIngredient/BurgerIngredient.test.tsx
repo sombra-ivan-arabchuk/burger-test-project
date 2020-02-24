@@ -24,12 +24,6 @@ const setup = (types: Array<string>): SetupProps => {
 };
 
 describe('Catalog', () => {
-  it('renders', async () => {
-    const { container } = setup(['meat']);
-    await waitForElement(() => container);
-    expect(container.firstChild).toMatchSnapshot();
-  });
-
   it('check if component renders correct type of ingredient', async () => {
     const { container } = setup(['meat', 'salad']);
 

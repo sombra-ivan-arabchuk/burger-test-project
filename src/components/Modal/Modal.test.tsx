@@ -21,13 +21,7 @@ const setup = (isOpened: boolean): SetupProps => {
 };
 
 describe('Catalog', () => {
-  it('renders', async () => {
-    const { container } = setup(true);
-    await waitForElement(() => container);
-    expect(container.firstChild).toMatchSnapshot();
-  });
-
-  it('check if modal is shown', async () => {
+   it('check if modal is shown', async () => {
     const { utils } = setup(true);
     const { getByText } = utils;
     await waitForElement(() => getByText('test text'));

@@ -29,12 +29,6 @@ const setup = (): SetupProps => {
 };
 
 describe('Catalog', () => {
-  it('renders', async () => {
-    const { container } = setup();
-    await waitForElement(() => container);
-    expect(container.firstChild).toMatchSnapshot();
-  });
-
   it('check if Login button exists', async () => {
     const { utils } = setup();
     const { getAllByText } = utils;

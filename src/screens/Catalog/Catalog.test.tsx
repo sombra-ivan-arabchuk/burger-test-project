@@ -54,8 +54,5 @@ describe('Catalog', () => {
         },
       ]);
     });
-    const { container } = setup();
-    await waitForElement(() => container);
-    expect(container.firstChild).toMatchSnapshot();
   });
 });
