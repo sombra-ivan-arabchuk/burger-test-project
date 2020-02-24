@@ -1,29 +1,30 @@
 import React, { FC } from 'react';
-import {  HashRouter, Route, Switch } from 'react-router-dom';
+import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import NavBar from './components/NavBar/NavBar';
 import Catalog from './screens/Catalog/Catalog';
 import { useNetwork } from './hooks';
 import styled from 'styled-components';
 import OnBoarding from './screens/OnBoarding/OnBoarding';
+import routes from './utils/routes';
 
 const MainApp: FC = () => {
   const { isOnline } = useNetwork();
 
   return (
     <>
-      <HashRouter>
+      <BrowserRouter>
         <div>
           <NavBar />
         </div>
         <Switch>
-          <Route exact path="/">
+          <Route exact path={routes.home}>
             <OnBoarding />
           </Route>
-          <Route path="/catalog">
+          <Route path={routes.catalog}>
             <Catalog />
           </Route>
         </Switch>
-      </HashRouter>
+      </BrowserRouter>
       {!isOnline && <OfflineHeader>you are offline</OfflineHeader>}
     </>
   );

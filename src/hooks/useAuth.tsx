@@ -1,6 +1,7 @@
 import React, { useState, useContext, createContext, useEffect } from 'react';
 import { History } from 'history';
 import { useNetwork } from './useNetwork';
+import routes from '../utils/routes';
 
 interface ProvideAuthProps {
   children: React.ReactChild;
@@ -63,7 +64,7 @@ function useProvideAuth(): UseAuthProps {
     localStorage.setItem('user', JSON.stringify(profileData));
     setToken(idToken);
     setUser(profileData);
-    history.push('/catalog');
+    history.push(routes.catalog);
     return token;
   };
 
@@ -71,7 +72,7 @@ function useProvideAuth(): UseAuthProps {
     localStorage.clear();
     setToken('');
     setUser({ name: '', email: '' });
-    history.push('/');
+    history.push(routes.home);
   };
 
   const localAuthRefresh = (): void => {
