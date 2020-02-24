@@ -2,6 +2,7 @@ import React, { FC } from 'react';
 import { useAuth } from '../../hooks';
 import { withRouter } from 'react-router';
 import { History } from 'history';
+import routes from '../../utils/routes';
 
 interface NavBarProps {
   history: History;
@@ -12,7 +13,7 @@ const OnBoarding: FC<NavBarProps> = ({ history }) => {
   console.log(token);
 
   if (token !== '') {
-    history.push('/catalog');
+    history.push(routes.catalog);
   }
 
   return <div>asdfasdfasdf</div>;
