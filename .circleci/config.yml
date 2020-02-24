@@ -36,7 +36,6 @@ jobs:
             export REACT_APP_NUTRITION_KEY="$REACT_APP_NUTRITION_KEY"
             export REACT_APP_GOOGLE_CLIENT_ID="$REACT_APP_GOOGLE_CLIENT_ID"
             npm run deploy
-
   test-app:
     docker:
       - image: circleci/node:10.16
