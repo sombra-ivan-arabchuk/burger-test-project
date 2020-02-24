@@ -1,0 +1,23 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Catalog renders 1`] = `
+<div
+  style="position: fixed; bottom: 5%; right: 10%;"
+>
+  <button
+    class="MuiButtonBase-root MuiButton-root MuiButton-text"
+    style="background-color: rgb(240, 142, 73);"
+    tabindex="0"
+    type="button"
+  >
+    <span
+      class="MuiButton-label"
+    >
+      open builder
+    </span>
+    <span
+      class="MuiTouchRipple-root"
+    />
+  </button>
+</div>
+`;
