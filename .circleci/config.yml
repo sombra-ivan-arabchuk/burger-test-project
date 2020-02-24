@@ -56,7 +56,6 @@ jobs:
       - run:
           name: Test
           command: npm test
-
 workflows:
   build_and_test:
     jobs:
@@ -67,3 +66,4 @@ workflows:
             branches:
               only: master
               ignore: gh-pages
+      - test-app
