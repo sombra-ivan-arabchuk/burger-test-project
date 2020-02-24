@@ -110,9 +110,14 @@ const Catalog = (): React.ReactElement => {
                     height: '100%',
                   }}
                 >
-                  <Burger ingredients={ingredients} name={name} />
+                  <Burger
+                    ingredients={ingredients}
+                    name={name}
+                    data-testid={name}
+                  />
                   <div style={{ display: 'flex', flexDirection: 'column' }}>
                     <CustomButton
+                      testId={`${name}-update`}
                       isDisabled={false}
                       onClick={() => {
                         setSelectedBurger(burger);
@@ -122,6 +127,7 @@ const Catalog = (): React.ReactElement => {
                       Edit
                     </CustomButton>
                     <CustomButton
+                      testId={`${name}-delete`}
                       isDisabled={false}
                       onClick={() => {
                         removeBurger(id);
@@ -145,6 +151,7 @@ const Catalog = (): React.ReactElement => {
 
       <div style={{ position: 'fixed', bottom: '5%', right: '10%' }}>
         <CustomButton
+          testId={'openBuilder'}
           onClick={(): void => setIsModalOpen(true)}
           isDisabled={false}
         >

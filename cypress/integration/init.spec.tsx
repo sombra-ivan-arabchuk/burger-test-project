@@ -1,5 +1,7 @@
 describe('Cypress', () => {
-  it('visits the app', () => {
+  it('visits the app, add, update, delete burger', async () => {
+    const newBurgerName = 'Cypress burger';
+    const updatedBurgerName = 'update burger';
     Cypress.Commands.add('login', () => {
       localStorage.setItem('token', 'asdfasdf');
       const ingredients = [
@@ -47,16 +49,25 @@ describe('Cypress', () => {
         JSON.stringify({ email: 'test@gmail.com', name: 'IVan' }),
       );
     });
+
     cy.visit('http://localhost:3000');
     cy.login();
     cy.reload();
     cy.visit('http://localhost:3000/catalog');
     cy.contains('open builder').click();
-    cy.contains('more').click();
-    cy.contains('more').click();
-    cy.contains('more').click();
-    cy.contains('more').click();
+    cy.get('[data-testid="burger-input"]').type(newBurgerName);
+    cy.get('[data-testid="Bacon-more"]').click();
+    cy.get('[data-testid="Salad-more"]').click();
+    cy.get('[data-testid="Meat-more"]').click();
+    cy.get('[data-testid="Salad-less"]').click();
     cy.contains('save').click();
-    cy.contains('close').click();
+    cy.contains(newBurgerName);
+    cy.get(`[data-testid="${newBurgerName}-update"]`).click();
+    cy.get('[data-testid="burger-input"]').type(updatedBurgerName);
+    cy.contains('edit').click();
+    cy.contains(updatedBurgerName);
+    cy.get(
+      `[data-testid="${newBurgerName + updatedBurgerName}-delete"]`,
+    ).click();
   });
 });

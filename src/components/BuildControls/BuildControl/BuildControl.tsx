@@ -4,7 +4,7 @@ import styled from 'styled-components';
 interface BuildControlProps {
   label: string;
   addIngredient: Function;
-  removeIngredient: Function
+  removeIngredient: Function;
 }
 
 const BuildControl: FunctionComponent<BuildControlProps> = ({
@@ -15,10 +15,20 @@ const BuildControl: FunctionComponent<BuildControlProps> = ({
   return (
     <ControlContainer>
       <Label>{label}</Label>
-      <Button buttonType="less" onClick={() => removeIngredient()}>
+      <Button
+        type="button"
+        buttonType="less"
+        data-testid={`${label}-less`}
+        onClick={() => removeIngredient()}
+      >
         less
       </Button>
-      <Button buttonType="more" onClick={() => addIngredient()}>
+      <Button
+        type="button"
+        buttonType="more"
+        data-testid={`${label}-more`}
+        onClick={() => addIngredient()}
+      >
         more
       </Button>
     </ControlContainer>

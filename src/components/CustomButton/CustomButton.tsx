@@ -3,22 +3,31 @@ import { Button } from '@material-ui/core';
 
 interface ModalProps {
   children: ReactNode;
-  isDisabled: false;
-  onClick: () => void;
+  isDisabled: boolean;
+  onClick?: () => void;
+  testId: string;
+  type?: 'button' | 'submit';
 }
 
 const CustomButton: FunctionComponent<ModalProps> = ({
   children,
   isDisabled,
   onClick,
-}) => (
-  <Button
-    disabled={isDisabled}
-    onClick={onClick}
-    style={{ backgroundColor: '#F08E49' }}
-  >
-    {children}
-  </Button>
-);
+  testId,
+  type,
+}) => {
+  console.log(isDisabled);
+  return (
+    <Button
+      type={type}
+      data-testid={testId}
+      disabled={isDisabled}
+      onClick={onClick}
+      style={{ backgroundColor: '#F08E49' }}
+    >
+      {children}
+    </Button>
+  );
+};
 
 export default CustomButton;
