@@ -36,11 +36,34 @@ jobs:
             export REACT_APP_NUTRITION_KEY="$REACT_APP_NUTRITION_KEY"
             export REACT_APP_GOOGLE_CLIENT_ID="$REACT_APP_GOOGLE_CLIENT_ID"
             npm run deploy
+  test-app:
+    docker:
+      - image: circleci/node:10.16
+    steps:
+      - checkout
+      - restore_cache:
+          key: dependency-cache-{{ checksum "package.json" }}
+      - run:
+          name: Install Hexo CLI
+          command: |
+            sudo npm install hexo-cli -g
+            npm i
+            npm install hexo --save
+      - save_cache:
+          key: dependency-cache-{{ checksum "package.json" }}
+          paths:
+            - node_modules
+      - run:
+          name: Test
+          command: npm test
 workflows:
   build_and_test:
     jobs:
       - build:
+          requires:
+            - test-app
           filters:
             branches:
               only: master
               ignore: gh-pages
+      - test-app

@@ -1,6 +1,7 @@
 import React, { useState, useContext, createContext, useEffect } from 'react';
 import { History } from 'history';
 import { useNetwork } from './useNetwork';
+import routes from '../utils/routes';
 
 interface ProvideAuthProps {
   children: React.ReactChild;
@@ -45,6 +46,7 @@ export const useAuth = (): UseAuthProps => useContext(authContext);
 
 // Provider hook that creates auth object and handles state
 function useProvideAuth(): UseAuthProps {
+  const [, forceRerender] = useState();
   const [token, setToken] = useState('');
   const [user, setUser] = useState({ name: '', email: '' });
   const { isOnline } = useNetwork();
@@ -63,7 +65,7 @@ function useProvideAuth(): UseAuthProps {
     localStorage.setItem('user', JSON.stringify(profileData));
     setToken(idToken);
     setUser(profileData);
-    history.push('/catalog');
+    history.push(routes.catalog);
     return token;
   };
 
@@ -71,7 +73,7 @@ function useProvideAuth(): UseAuthProps {
     localStorage.clear();
     setToken('');
     setUser({ name: '', email: '' });
-    history.push('/');
+    history.push(routes.home);
   };
 
   const localAuthRefresh = (): void => {
@@ -95,15 +97,23 @@ function useProvideAuth(): UseAuthProps {
     const _onError = (err: AuthError): void => {
       console.log('error', err);
     };
-    window.gapi.load('auth2', function() {
-      window.gapi.auth2
-        .init({ [clientId]: process.env.REACT_APP_GOOGLE_CLIENT_ID })
-        .then(_onInit, _onError);
-    });
+    const { gapi } = window;
+    if (gapi) {
+      gapi.load('auth2', function() {
+        gapi.auth2
+          .init({ [clientId]: process.env.REACT_APP_GOOGLE_CLIENT_ID })
+          .then(_onInit, _onError);
+      });
+    } else {
+      // eslint-disable-next-line
+      // @ts-ignore
+      window.myFunc = forceRerender;
+    }
+
     // we include the empty array which means this only runs once on component mount
     // since we are simply getting an item from AsyncStorage that is sufficient for now
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isOnline]);
+  }, [isOnline, window.gapi]);
 
   // Return the token, user object, and auth methods
   return {
