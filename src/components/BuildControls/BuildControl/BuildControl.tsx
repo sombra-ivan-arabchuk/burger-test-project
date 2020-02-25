@@ -3,8 +3,8 @@ import styled from 'styled-components';
 
 interface BuildControlProps {
   label: string;
-  addIngredient: Function;
-  removeIngredient: Function;
+  addIngredient: () => void;
+  removeIngredient: () => void;
 }
 
 const BuildControl: FunctionComponent<BuildControlProps> = ({
@@ -19,7 +19,7 @@ const BuildControl: FunctionComponent<BuildControlProps> = ({
         type="button"
         buttonType="less"
         data-testid={`${label}-less`}
-        onClick={() => removeIngredient()}
+        onClick={(): void => removeIngredient()}
       >
         less
       </Button>
@@ -27,7 +27,7 @@ const BuildControl: FunctionComponent<BuildControlProps> = ({
         type="button"
         buttonType="more"
         data-testid={`${label}-more`}
-        onClick={() => addIngredient()}
+        onClick={(): void => addIngredient()}
       >
         more
       </Button>

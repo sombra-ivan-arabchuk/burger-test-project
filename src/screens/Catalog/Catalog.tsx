@@ -28,7 +28,7 @@ const Catalog = (): React.ReactElement => {
     selectedBurger,
     setSelectedBurger,
   ] = React.useState<BurgerProps | null>(null);
-  useEffect(() => {
+  useEffect((): (() => void) => {
     const interval = setInterval(
       () => {
         getBurgers().then(({ data = {} }) => {
@@ -46,7 +46,7 @@ const Catalog = (): React.ReactElement => {
       burgers.length === 0 ? 1000 : 5000,
     );
 
-    return () => clearInterval(interval);
+    return (): void => clearInterval(interval);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOnline, burgers]);
 
@@ -117,9 +117,10 @@ const Catalog = (): React.ReactElement => {
                   />
                   <div style={{ display: 'flex', flexDirection: 'column' }}>
                     <CustomButton
+                      style={{ marginBottom: '10px' }}
                       testId={`${name}-update`}
                       isDisabled={false}
-                      onClick={() => {
+                      onClick={(): void => {
                         setSelectedBurger(burger);
                         setIsModalOpen(true);
                       }}
@@ -129,7 +130,7 @@ const Catalog = (): React.ReactElement => {
                     <CustomButton
                       testId={`${name}-delete`}
                       isDisabled={false}
-                      onClick={() => {
+                      onClick={(): void => {
                         removeBurger(id);
                       }}
                     >
@@ -141,7 +142,7 @@ const Catalog = (): React.ReactElement => {
             </Grid>
 
             <Grid item xs={12} sm={6}>
-              <div>
+              <div style={{ marginTop: '10px' }}>
                 <BurgerDetailsTable ingredients={ingredients} />
               </div>
             </Grid>

@@ -1,6 +1,6 @@
 const routes = {
-  home: '/burger-test-project',
-  catalog: '/burger-test-project/catalog',
+  home: '/',
+  catalog: '/catalog',
 };
 
 export default routes;

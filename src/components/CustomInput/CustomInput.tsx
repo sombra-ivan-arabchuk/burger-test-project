@@ -1,8 +1,7 @@
 import React, { FunctionComponent } from 'react';
-import TextField from '@material-ui/core/TextField';
+import { TextField } from '@material-ui/core';
 
 interface ModalProps {
-  id?: string;
   value: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   label: string;
@@ -13,6 +12,8 @@ const CustomInput: FunctionComponent<ModalProps> = ({
   onChange,
   label,
 }) => (
+  // eslint-disable-next-line
+  // @ts-ignore
   <TextField
     style={{ width: '100%' }}
     value={value}

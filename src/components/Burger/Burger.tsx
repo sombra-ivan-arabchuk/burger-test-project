@@ -17,6 +17,7 @@ const Burger: FunctionComponent<BurgerProps> = ({
   name,
   isEditing = false,
 }) => {
+  console.log(isEditing);
   const transformedIngredients = Object.keys(ingredients)
     .map((igKey: string) => {
       return [...Array(ingredients[igKey])].map((_, i) => (

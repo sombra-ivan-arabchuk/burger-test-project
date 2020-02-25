@@ -6,6 +6,7 @@ interface ModalProps {
   isDisabled: boolean;
   onClick?: () => void;
   testId: string;
+  style?: object;
   type?: 'button' | 'submit';
 }
 
@@ -15,19 +16,17 @@ const CustomButton: FunctionComponent<ModalProps> = ({
   onClick,
   testId,
   type,
-}) => {
-  console.log(isDisabled);
-  return (
-    <Button
-      type={type}
-      data-testid={testId}
-      disabled={isDisabled}
-      onClick={onClick}
-      style={{ backgroundColor: '#F08E49' }}
-    >
-      {children}
-    </Button>
-  );
-};
+  style,
+}) => (
+  <Button
+    type={type}
+    data-testid={testId}
+    disabled={isDisabled}
+    onClick={onClick}
+    style={{ ...style, backgroundColor: '#F08E49' }}
+  >
+    {children}
+  </Button>
+);
 
 export default CustomButton;

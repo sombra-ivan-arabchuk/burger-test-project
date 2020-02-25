@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, RenderResult, waitForElement } from '@testing-library/react';
+import { render, RenderResult } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import Catalog from './Catalog';
 import * as burgerAPI from '../../utils/burger-api';

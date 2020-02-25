@@ -82,63 +82,63 @@ const BurgerBuilder: FunctionComponent<BurgerBuilderProps> = ({
     setIngredients(updatedIngredients);
   };
 
+  const isSubmitButtonDisabled = (errors: object): boolean =>
+    Object.keys(errors).length > 0 ||
+    !Object.keys(ingredients).some(key => ingredients[key] > 0);
+
   return (
     <div style={{ height: '400px' }}>
       <Formik
         initialValues={{ name: name }}
         validationSchema={burgerBuilderValidationSchema}
-        onSubmit={({ name }): void =>
-          isEditing ? changeBurger(name) : saveNewBurger(name)
+        onSubmit={({ name: newName }): void =>
+          isEditing && name !== ''
+            ? changeBurger(newName)
+            : saveNewBurger(newName)
         }
       >
-        {({ errors, handleChange, touched, values }): ReactNode => (
-          <Form>
-            <div style={{ margin: '50px 0' }}>
-              <CustomInput
-                id={'name'}
-                value={values.name}
-                onChange={handleChange('name')}
-                label="Burger Name"
+        {({ errors, handleChange, touched, values }): ReactNode => {
+          return (
+            <Form style={{ height: '100%' }}>
+              <div style={{ margin: '50px 0' }}>
+                <CustomInput
+                  value={values.name}
+                  onChange={handleChange('name')}
+                  label="Burger Name"
+                />
+                {errors.name && touched.name ? (
+                  <div style={{ color: 'red' }}>{errors.name}</div>
+                ) : null}
+              </div>
+              <Burger
+                ingredients={ingredients}
+                name={name}
+                isEditing={isEditing}
               />
-              {errors.name && touched.name ? (
-                <div style={{ color: 'red' }}>{errors.name}</div>
-              ) : null}
-            </div>
-            <Burger
-              ingredients={ingredients}
-              name={name}
-              isEditing={isEditing}
-            />
-            <BuildControls
-              addIngredient={addIngredient}
-              removeIngredient={removeIngredient}
-            />
-            {!id ? (
-              <CustomButton
-                type="submit"
-                testId="saveBurger"
-                isDisabled={
-                  Object.keys(errors).length > 0 ||
-                  !Object.keys(ingredients).some(key => ingredients[key] > 0)
-                }
-              >
-                save
-              </CustomButton>
-            ) : (
-              <CustomButton
-                testId="editBurger"
-                type="submit"
-                isDisabled={
-                  Object.keys(errors).length > 0 ||
-                  !Object.keys(ingredients).some(key => ingredients[key] > 0)
-                }
-              >
-                edit
-              </CustomButton>
-            )}
-          </Form>
-        )}
-        }
+              <BuildControls
+                addIngredient={addIngredient}
+                removeIngredient={removeIngredient}
+              />
+              {!id ? (
+                <CustomButton
+                  type="submit"
+                  testId="saveBurger"
+                  isDisabled={isSubmitButtonDisabled(errors)}
+                >
+                  save
+                </CustomButton>
+              ) : (
+                <CustomButton
+                  type="submit"
+                  testId="editBurger"
+                  isDisabled={isSubmitButtonDisabled(errors)}
+                >
+                  edit
+                </CustomButton>
+              )}
+            </Form>
+          );
+        }}
       </Formik>
     </div>
   );

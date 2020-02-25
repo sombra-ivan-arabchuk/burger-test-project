@@ -53,15 +53,21 @@ describe('Cypress', () => {
     cy.visit('http://localhost:3000');
     cy.login();
     cy.reload();
+    // here we have everything to be able to access catalog page
     cy.visit('http://localhost:3000/catalog');
     cy.contains('open builder').click();
+
+    // fill form
     cy.get('[data-testid="burger-input"]').type(newBurgerName);
     cy.get('[data-testid="Bacon-more"]').click();
     cy.get('[data-testid="Salad-more"]').click();
     cy.get('[data-testid="Meat-more"]').click();
     cy.get('[data-testid="Salad-less"]').click();
+    // here we have name and ingredients of burger
     cy.contains('save').click();
     cy.contains(newBurgerName);
+
+    // need to test updating
     cy.get(`[data-testid="${newBurgerName}-update"]`).click();
     cy.get('[data-testid="burger-input"]').type(updatedBurgerName);
     cy.contains('edit').click();
