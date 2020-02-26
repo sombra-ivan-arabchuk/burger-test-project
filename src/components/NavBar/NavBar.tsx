@@ -42,7 +42,7 @@ const NavBar = ({ history }: NavBarProps): React.ReactElement => {
 
   const AccessBlock =
     user.name === '' ? (
-      <Button color="inherit" onClick={(): Promise<string> => signIn(history)}>
+      <Button color="inherit" onClick={(): Promise<void> => signIn(history)}>
         Login
       </Button>
     ) : (

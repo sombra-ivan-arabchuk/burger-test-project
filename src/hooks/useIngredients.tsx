@@ -50,7 +50,7 @@ function useProvideIngredients(): UseIngredientsProps {
   const [ingredients, setIngredients] = useState<Array<IngredientProps>>([]);
   const { isOnline } = useNetwork();
 
-  const localIngredientsRefresh = () => {
+  const localIngredientsRefresh = (): void => {
     const storedIngredients = localStorage.getItem('ingredients');
     if (storedIngredients) {
       const parsedData = JSON.parse(storedIngredients);

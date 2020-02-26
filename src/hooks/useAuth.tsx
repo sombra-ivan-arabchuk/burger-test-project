@@ -20,15 +20,15 @@ export interface User {
 export interface UseAuthProps {
   user: User;
   token: string;
-  signIn: (e: History) => Promise<string>;
+  signIn: (e: History) => Promise<void>;
   signOut: (e: History) => void;
 }
 
 const authContext = createContext<UseAuthProps>({
   user: { name: '', email: '' },
   token: '',
-  signOut: () => console.log(),
-  signIn: () => Promise.resolve(''),
+  signOut: () => '',
+  signIn: () => Promise.resolve(),
 });
 
 const clientId = 'client_id';
@@ -51,22 +51,24 @@ function useProvideAuth(): UseAuthProps {
   const [user, setUser] = useState({ name: '', email: '' });
   const { isOnline } = useNetwork();
 
-  // TODO: wrap execution inside try catch
-  const signIn = async (history: History): Promise<string> => {
-    const auth2 = window.gapi.auth2.getAuthInstance();
-    const googleUser = await auth2.signIn();
-    const profile = googleUser.getBasicProfile();
-    const profileData = {
-      name: profile.getGivenName(),
-      email: profile.getEmail(),
-    };
-    const idToken = googleUser.getAuthResponse().id_token;
-    localStorage.setItem('token', idToken);
-    localStorage.setItem('user', JSON.stringify(profileData));
-    setToken(idToken);
-    setUser(profileData);
-    history.push(routes.catalog);
-    return token;
+  const signIn = async (history: History): Promise<void> => {
+    try {
+      const auth2 = window.gapi.auth2.getAuthInstance();
+      const googleUser = await auth2.signIn();
+      const profile = googleUser.getBasicProfile();
+      const profileData = {
+        name: profile.getGivenName(),
+        email: profile.getEmail(),
+      };
+      const idToken = googleUser.getAuthResponse().id_token;
+      localStorage.setItem('token', idToken);
+      localStorage.setItem('user', JSON.stringify(profileData));
+      setToken(idToken);
+      setUser(profileData);
+      history.push(routes.catalog);
+    } catch (e) {
+      console.error(e);
+    }
   };
 
   const signOut = (history: History): void => {

@@ -1,10 +1,12 @@
-import React, { FunctionComponent, useState } from 'react';
+import React, { FunctionComponent, ReactNode, useState } from 'react';
 import Burger from '../../components/Burger/Burger';
 import BuildControls from '../../components/BuildControls/BuildControls';
 import CustomButton from '../../components/CustomButton/CustomButton';
 import CustomInput from '../../components/CustomInput/CustomInput';
 import { editBurger, saveBurger } from '../../utils/firebase';
 import { BurgerProps } from '../Catalog/Catalog';
+import { Form, Formik } from 'formik';
+import burgerBuilderValidationSchema from './burger-builder-validation';
 
 type BurgerBuilderProps = {
   addBurger: (burger: BurgerProps) => void;
@@ -26,7 +28,7 @@ const BurgerBuilder: FunctionComponent<BurgerBuilderProps> = ({
   id,
 }) => {
   const [isEditing] = useState(burgerName !== '');
-  const [name, setName] = useState(burgerName || '');
+  const [name] = useState(burgerName || '');
   const [ingredients, setIngredients] = useState<IngredientProps>(
     ingredientsSet || {
       salad: 0,
@@ -35,12 +37,6 @@ const BurgerBuilder: FunctionComponent<BurgerBuilderProps> = ({
       bacon: 0,
     },
   );
-
-  const handleNameChange = (
-    event: React.ChangeEvent<HTMLInputElement>,
-  ): void => {
-    setName(event.target.value);
-  };
 
   const addIngredient = (type: string): void => {
     const oldCount = ingredients[type];
@@ -52,7 +48,7 @@ const BurgerBuilder: FunctionComponent<BurgerBuilderProps> = ({
     setIngredients(updatedingredients);
   };
 
-  const saveNewBurger = (): void => {
+  const saveNewBurger = (name: string): void => {
     const newBurger = {
       ingredients: ingredients,
       name: name,
@@ -63,7 +59,7 @@ const BurgerBuilder: FunctionComponent<BurgerBuilderProps> = ({
     });
   };
 
-  const changeBurger = (): void => {
+  const changeBurger = (name: string): void => {
     const newBurger = {
       ingredients: ingredients,
       name: name,
@@ -86,29 +82,64 @@ const BurgerBuilder: FunctionComponent<BurgerBuilderProps> = ({
     setIngredients(updatedIngredients);
   };
 
+  const isSubmitButtonDisabled = (errors: object): boolean =>
+    Object.keys(errors).length > 0 ||
+    !Object.keys(ingredients).some(key => ingredients[key] > 0);
+
   return (
     <div style={{ height: '400px' }}>
-      <div style={{ margin: '50px 0' }}>
-        <CustomInput
-          value={name}
-          onChange={handleNameChange}
-          label={'Burger Name'}
-        />
-      </div>
-      <Burger ingredients={ingredients} name={name} isEditing={isEditing}/>
-      <BuildControls
-        addIngredient={addIngredient}
-        removeIngredient={removeIngredient}
-      />
-      {!id ? (
-        <CustomButton isDisabled={false} onClick={saveNewBurger}>
-          save
-        </CustomButton>
-      ) : (
-        <CustomButton isDisabled={false} onClick={changeBurger}>
-          edit
-        </CustomButton>
-      )}
+      <Formik
+        initialValues={{ name: name }}
+        validationSchema={burgerBuilderValidationSchema}
+        onSubmit={({ name: newName }): void =>
+          isEditing && name !== ''
+            ? changeBurger(newName)
+            : saveNewBurger(newName)
+        }
+      >
+        {({ errors, handleChange, touched, values }): ReactNode => {
+          return (
+            <Form style={{ height: '100%' }}>
+              <div style={{ margin: '50px 0' }}>
+                <CustomInput
+                  value={values.name}
+                  onChange={handleChange('name')}
+                  label="Burger Name"
+                />
+                {errors.name && touched.name ? (
+                  <div style={{ color: 'red' }}>{errors.name}</div>
+                ) : null}
+              </div>
+              <Burger
+                ingredients={ingredients}
+                name={name}
+                isEditing={isEditing}
+              />
+              <BuildControls
+                addIngredient={addIngredient}
+                removeIngredient={removeIngredient}
+              />
+              {!id ? (
+                <CustomButton
+                  type="submit"
+                  testId="saveBurger"
+                  isDisabled={isSubmitButtonDisabled(errors)}
+                >
+                  save
+                </CustomButton>
+              ) : (
+                <CustomButton
+                  type="submit"
+                  testId="editBurger"
+                  isDisabled={isSubmitButtonDisabled(errors)}
+                >
+                  edit
+                </CustomButton>
+              )}
+            </Form>
+          );
+        }}
+      </Formik>
     </div>
   );
 };

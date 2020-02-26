@@ -20,12 +20,12 @@ const BuildControls: FunctionComponent<BuildControlsProps> = ({
 }) => {
   return (
     <ControlsContainer>
-      {controls.map(control => (
+      {controls.map(({ type, label }) => (
         <BuildControl
-          key={control.label}
-          label={control.label}
-          addIngredient={(): void => addIngredient(control.type)}
-          removeIngredient={(): void => removeIngredient(control.type)}
+          key={label}
+          label={label}
+          addIngredient={(): void => addIngredient(type)}
+          removeIngredient={(): void => removeIngredient(type)}
         />
       ))}
     </ControlsContainer>

@@ -28,27 +28,38 @@ const Catalog = (): React.ReactElement => {
     selectedBurger,
     setSelectedBurger,
   ] = React.useState<BurgerProps | null>(null);
-  useEffect(() => {
+  useEffect((): (() => void) => {
     const interval = setInterval(
       () => {
-        getBurgers().then(({ data = {} }) => {
-          const resData = data || {};
+        getBurgers()
+          .then(({ data = {} }) => {
+            const resData = data || {};
 
-          const mappedData = Object.keys(resData)
-            .filter(key => !burgers.some(burger => burger.id === key))
-            .map(key => ({
-              ...data[key],
-              id: key,
-            }));
-          setBurgers(burgers.concat(mappedData));
-        });
+            const mappedData = Object.keys(resData)
+              .filter(key => !burgers.some(burger => burger.id === key))
+              .map(key => ({
+                ...data[key],
+                id: key,
+              }));
+            setBurgers(burgers.concat(mappedData));
+          })
+          .catch(err => console.log(err));
       },
       burgers.length === 0 ? 1000 : 5000,
     );
 
-    return () => clearInterval(interval);
+    return (): void => clearInterval(interval);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOnline, burgers]);
+
+  useEffect(() => {
+    // set burgers into local storage when we got offline
+    if (!isOnline) {
+      const storedBurgers = localStorage.getItem('burgers') || '[]';
+      localStorage.setItem('burgers', JSON.stringify(burgers));
+      setBurgers(JSON.parse(storedBurgers));
+    }
+  }, [isOnline]);
 
   const addNewBurger = (burger: BurgerProps): void => {
     setBurgers([...burgers, burger]);
@@ -110,11 +121,17 @@ const Catalog = (): React.ReactElement => {
                     height: '100%',
                   }}
                 >
-                  <Burger ingredients={ingredients} name={name} />
+                  <Burger
+                    ingredients={ingredients}
+                    name={name}
+                    data-testid={name}
+                  />
                   <div style={{ display: 'flex', flexDirection: 'column' }}>
                     <CustomButton
+                      style={{ marginBottom: '10px' }}
+                      testId={`${name}-update`}
                       isDisabled={false}
-                      onClick={() => {
+                      onClick={(): void => {
                         setSelectedBurger(burger);
                         setIsModalOpen(true);
                       }}
@@ -122,8 +139,9 @@ const Catalog = (): React.ReactElement => {
                       Edit
                     </CustomButton>
                     <CustomButton
+                      testId={`${name}-delete`}
                       isDisabled={false}
-                      onClick={() => {
+                      onClick={(): void => {
                         removeBurger(id);
                       }}
                     >
@@ -135,7 +153,7 @@ const Catalog = (): React.ReactElement => {
             </Grid>
 
             <Grid item xs={12} sm={6}>
-              <div>
+              <div style={{ marginTop: '10px' }}>
                 <BurgerDetailsTable ingredients={ingredients} />
               </div>
             </Grid>
@@ -145,6 +163,7 @@ const Catalog = (): React.ReactElement => {
 
       <div style={{ position: 'fixed', bottom: '5%', right: '10%' }}>
         <CustomButton
+          testId={'openBuilder'}
           onClick={(): void => setIsModalOpen(true)}
           isDisabled={false}
         >
