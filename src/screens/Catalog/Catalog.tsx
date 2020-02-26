@@ -59,6 +59,7 @@ const Catalog = (): React.ReactElement => {
       localStorage.setItem('burgers', JSON.stringify(burgers));
       setBurgers(JSON.parse(storedBurgers));
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOnline]);
 
   const addNewBurger = (burger: BurgerProps): void => {
