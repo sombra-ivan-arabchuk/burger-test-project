@@ -1,6 +1,0 @@
-.cache
-public
-node_modules
-package-lock.json
-.eslintrc.json
-serviceWorker.ts
