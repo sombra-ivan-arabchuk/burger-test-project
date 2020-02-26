@@ -22,7 +22,7 @@ export function ProvideNetwork({
 export const useNetwork = (): NetworkProps => useContext(networkContext);
 
 function useProvideNetwork(): NetworkProps {
-  const [isOnline, setIsOnline] = useState<boolean>(true);
+  const [isOnline, setIsOnline] = useState<boolean>(navigator.onLine);
 
   useEffect(() => {
     window.addEventListener('online', () => setIsOnline(true));
