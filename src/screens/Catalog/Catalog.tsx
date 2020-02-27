@@ -53,13 +53,16 @@ const Catalog = (): React.ReactElement => {
   }, [isOnline, burgers]);
 
   useEffect(() => {
-    // set burgers into local storage when we got offline
-    if (!isOnline) {
-      const storedBurgers = localStorage.getItem('burgers') || '[]';
+    if (burgers.length > 0) {
       localStorage.setItem('burgers', JSON.stringify(burgers));
-      setBurgers(JSON.parse(storedBurgers));
     }
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [burgers]);
+  useEffect(() => {
+    if (!isOnline) {
+      setBurgers(JSON.parse(localStorage.getItem('burgers') || '[]'));
+    }
   }, [isOnline]);
 
   const addNewBurger = (burger: BurgerProps): void => {
