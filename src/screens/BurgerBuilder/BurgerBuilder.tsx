@@ -3,17 +3,16 @@ import Burger from '../../components/Burger/Burger';
 import BuildControls from '../../components/BuildControls/BuildControls';
 import CustomButton from '../../components/CustomButton/CustomButton';
 import CustomInput from '../../components/CustomInput/CustomInput';
-import { editBurger, saveBurger } from '../../utils/firebase';
-import { BurgerProps } from '../Catalog/Catalog';
 import { Form, Formik } from 'formik';
 import burgerBuilderValidationSchema from './burger-builder-validation';
+import { changeBurger, createBurger } from '../../store/actions/burger';
+import { useDispatch } from 'react-redux';
 
 type BurgerBuilderProps = {
-  addBurger: (burger: BurgerProps) => void;
-  updateBurger: (burger: BurgerProps) => void;
   ingredientsSet?: IngredientProps;
   burgerName?: string;
   id?: string;
+  closeModal: () => void;
 };
 
 export type IngredientProps = {
@@ -21,14 +20,14 @@ export type IngredientProps = {
 };
 
 const BurgerBuilder: FunctionComponent<BurgerBuilderProps> = ({
-  addBurger,
-  updateBurger,
   ingredientsSet,
   burgerName,
   id,
+  closeModal,
 }) => {
   const [isEditing] = useState(burgerName !== '');
   const [name] = useState(burgerName || '');
+  const dispatch = useDispatch();
   const [ingredients, setIngredients] = useState<IngredientProps>(
     ingredientsSet || {
       salad: 0,
@@ -53,20 +52,17 @@ const BurgerBuilder: FunctionComponent<BurgerBuilderProps> = ({
       ingredients: ingredients,
       name: name,
     };
-    saveBurger(newBurger).then(({ data }) => {
-      const { name } = data;
-      addBurger({ ...newBurger, id: name });
-    });
+    dispatch(createBurger(newBurger));
+    closeModal();
   };
 
-  const changeBurger = (name: string): void => {
+  const editBurger = (name: string): void => {
     const newBurger = {
       ingredients: ingredients,
       name: name,
     };
-    editBurger(id, newBurger).then(() => {
-      updateBurger(newBurger);
-    });
+    dispatch(changeBurger(id, newBurger));
+    closeModal();
   };
 
   const removeIngredient = (type: string): void => {
@@ -93,7 +89,7 @@ const BurgerBuilder: FunctionComponent<BurgerBuilderProps> = ({
         validationSchema={burgerBuilderValidationSchema}
         onSubmit={({ name: newName }): void =>
           isEditing && name !== ''
-            ? changeBurger(newName)
+            ? editBurger(newName)
             : saveNewBurger(newName)
         }
       >
