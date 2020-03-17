@@ -1,14 +1,17 @@
-import React, { useEffect, useState } from 'react';
-
-import styled from 'styled-components';
-import { deleteBurger, getBurgers } from '../../utils/firebase';
-import Burger from '../../components/Burger/Burger';
+import React, { FC, useEffect, useState } from 'react';
 import CustomModal from '../../components/Modal/Modal';
 import BurgerBuilder from '../BurgerBuilder/BurgerBuilder';
 import CustomButton from '../../components/CustomButton/CustomButton';
 import BurgerDetailsTable from '../../components/BurgerDetailsTable/BurgerDetailsTable';
 import { Grid } from '@material-ui/core';
 import { useNetwork } from '../../hooks';
+import BurgerContainer from '../../components/BurgerContainer/BurgerContainer';
+import { useDispatch, useSelector } from 'react-redux';
+import {
+  removeBurger,
+  setBurgers,
+  storeBurgers,
+} from '../../store/actions/burger';
 
 export interface BurgerIngredients {
   [key: string]: number;
@@ -20,10 +23,13 @@ export interface BurgerProps {
   id?: string;
 }
 
-const Catalog = (): React.ReactElement => {
+const Catalog: FC = (): React.ReactElement => {
+  const burgers = useSelector(
+    (state: { brg: { burgers: BurgerProps[] } }) => state.brg.burgers,
+  );
+  const dispatch = useDispatch();
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const { isOnline } = useNetwork();
-  const [burgers, setBurgers] = React.useState<Array<BurgerProps>>([]);
   const [
     selectedBurger,
     setSelectedBurger,
@@ -31,19 +37,7 @@ const Catalog = (): React.ReactElement => {
   useEffect((): (() => void) => {
     const interval = setInterval(
       () => {
-        getBurgers()
-          .then(({ data = {} }) => {
-            const resData = data || {};
-
-            const mappedData = Object.keys(resData)
-              .filter(key => !burgers.some(burger => burger.id === key))
-              .map(key => ({
-                ...data[key],
-                id: key,
-              }));
-            setBurgers(burgers.concat(mappedData));
-          })
-          .catch(err => console.log(err));
+        dispatch(storeBurgers());
       },
       burgers.length === 0 ? 1000 : 5000,
     );
@@ -56,38 +50,27 @@ const Catalog = (): React.ReactElement => {
     if (burgers.length > 0) {
       localStorage.setItem('burgers', JSON.stringify(burgers));
     }
-
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [burgers]);
+
   useEffect(() => {
     if (!isOnline) {
-      setBurgers(JSON.parse(localStorage.getItem('burgers') || '[]'));
+      dispatch(setBurgers(JSON.parse(localStorage.getItem('burgers') || '[]')));
     }
   }, [isOnline]);
 
-  const addNewBurger = (burger: BurgerProps): void => {
-    setBurgers([...burgers, burger]);
-    setIsModalOpen(false);
-    setSelectedBurger(null);
+  const deleteBurger = (id: string | undefined): void => {
+    dispatch(removeBurger(id));
   };
 
-  const removeBurger = (id: string | undefined): void => {
-    deleteBurger(id).then(() => {
-      const filteredBurgers = burgers.filter(burger => burger.id !== id);
-      setBurgers(filteredBurgers);
-    });
+  const onEditBurger = (burger: BurgerProps): void => {
+    setSelectedBurger(burger);
+    setIsModalOpen(true);
   };
 
-  const updateBurger = (updatedBurger: BurgerProps): void => {
-    const slicedBurgers = burgers.filter(
-      burger => burger.id !== selectedBurger?.id,
-    );
-    setBurgers([
-      ...slicedBurgers,
-      { ...updatedBurger, id: selectedBurger?.id },
-    ]);
-    setSelectedBurger(null);
+  const closeModal = () => {
     setIsModalOpen(false);
+    setSelectedBurger(null);
   };
 
   return (
@@ -103,57 +86,27 @@ const Catalog = (): React.ReactElement => {
             close
           </div>
           <BurgerBuilder
-            addBurger={addNewBurger}
-            updateBurger={updateBurger}
             ingredientsSet={selectedBurger?.ingredients}
             burgerName={selectedBurger?.name}
             id={selectedBurger?.id}
+            closeModal={closeModal}
           />
         </div>
       </CustomModal>
 
       {burgers.map((burger: BurgerProps) => {
-        const { ingredients, name, id } = burger;
+        const { ingredients, id } = burger;
         return (
           <Grid container>
             <Grid item xs={12} sm={6}>
-              <BurgerWrapper>
-                <div
-                  style={{
-                    display: 'flex',
-                    flexDirection: 'row',
-                    height: '100%',
-                  }}
-                >
-                  <Burger
-                    ingredients={ingredients}
-                    name={name}
-                    data-testid={name}
-                  />
-                  <div style={{ display: 'flex', flexDirection: 'column' }}>
-                    <CustomButton
-                      style={{ marginBottom: '10px' }}
-                      testId={`${name}-update`}
-                      isDisabled={false}
-                      onClick={(): void => {
-                        setSelectedBurger(burger);
-                        setIsModalOpen(true);
-                      }}
-                    >
-                      Edit
-                    </CustomButton>
-                    <CustomButton
-                      testId={`${name}-delete`}
-                      isDisabled={false}
-                      onClick={(): void => {
-                        removeBurger(id);
-                      }}
-                    >
-                      remove
-                    </CustomButton>
-                  </div>
-                </div>
-              </BurgerWrapper>
+              <BurgerContainer
+                burger={burger}
+                key={id}
+                onEdit={onEditBurger}
+                onDelete={(): void => {
+                  deleteBurger(id);
+                }}
+              />
             </Grid>
 
             <Grid item xs={12} sm={6}>
@@ -177,18 +130,5 @@ const Catalog = (): React.ReactElement => {
     </>
   );
 };
-
-const BurgerWrapper = styled.div`
-  -webkit-box-shadow: 2px 2px 15px -6px rgba(0, 0, 0, 0.75);
-  -moz-box-shadow: 2px 2px 15px -6px rgba(0, 0, 0, 0.75);
-  box-shadow: 2px 2px 15px -6px rgba(0, 0, 0, 0.75);
-  margin: 10px;
-
-  height: 300px;
-  text-align: center;
-  font-weight: bold;
-  fontsize: 1.2rem;
-  max-width: 450px;
-`;
 
 export default Catalog;
